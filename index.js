@@ -11,6 +11,7 @@ const Product = myDB.define(
     id: {
       type: Sql.DataTypes.INTEGER,
       field: 'id',
+      autoIncrement: true,
       primaryKey: true
     },
     productName: {
@@ -39,6 +40,14 @@ async function entryPoint(){
     console.log(`SKU:  ${allProducts[i].sku}`)
     console.log('-------------------------')
   }
+
+
+  const newProduct = await Product.create({productName: 'Dettol', sku: 'DET-123'})
+  console.log('-------------------------')
+  console.log(`ID:  ${newProduct.id}`)
+  console.log(`Name:  ${newProduct.productName}`)
+  console.log(`SKU:  ${newProduct.sku}`)
+  console.log('-------------------------')
 }
 
 entryPoint();
