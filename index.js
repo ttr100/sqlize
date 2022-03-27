@@ -43,10 +43,16 @@ async function printAllEntry(){
 }
 
 async function new100Entry(){
+  let insertOperations = []
   for(let i = 0; i < 100; i++){
-    const newProduct = await Product.create({productName: 'GFUEL' + i.toString(), sku: 'TEST' + toString(i*10)});
+    insertOperations.push(
+      Product.create({
+        productName: 'GFUEL' + i.toString(), 
+        sku: 'TEST' + (i*10).toString()
+      })
+    )
   }
-
+  await Promise.all(insertOperations);
   console.log('DATA ENTRY DONE');
 }
 
