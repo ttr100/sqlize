@@ -29,8 +29,8 @@ const Product = myDB.define(
   }
 )
 
-
-async function entryPoint(){
+// Nicko
+async function printAllEntry(){
   const allProducts = await Product.findAll();
 
   for(let i = 0; i < allProducts.length; i++){
@@ -40,14 +40,19 @@ async function entryPoint(){
     console.log(`SKU:  ${allProducts[i].sku}`)
     console.log('-------------------------')
   }
-
-
-  const newProduct = await Product.create({productName: 'Dettol', sku: 'DET-123'})
-  console.log('-------------------------')
-  console.log(`ID:  ${newProduct.id}`)
-  console.log(`Name:  ${newProduct.productName}`)
-  console.log(`SKU:  ${newProduct.sku}`)
-  console.log('-------------------------')
 }
 
-entryPoint();
+async function new100Entry(){
+  for(let i = 0; i < 100; i++){
+    const newProduct = await Product.create({productName: 'GFUEL' + i.toString(), sku: 'TEST' + toString(i*10)});
+  }
+
+  console.log('DATA ENTRY DONE');
+}
+
+async function fun(){
+  await new100Entry();
+  await printAllEntry();
+}
+
+fun()
