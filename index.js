@@ -1,12 +1,10 @@
 const Sql = require('sequelize');
+const express = require('express')
+
 const myDB = new Sql({
     dialect: 'sqlite',
     storage: './data.db'
 })
-// ORM
-// Object-Relation mapping
-
-
 // Model
 const Product = myDB.define(
   'Product', 
@@ -55,37 +53,27 @@ const Sales = myDB.define(
   }
 )
 
+const app = express()
+app.use(express.urlencoded({ extended: true }));
+const port = 3000
 
-async function printAllEntry(){
-  const allProducts = await Product.findAll();
-
-  for(let i = 0; i < allProducts.length; i++){
-    console.log('-------------------------')
-    console.log(`ID:  ${allProducts[i].id}`)
-    console.log(`Name:  ${allProducts[i].productName}`)
-    console.log(`SKU:  ${allProducts[i].sku}`)
-    console.log('-------------------------')
-  }
+app.get('/', indexPage)
+function indexPage(req, res) {
+  res.send(`
+<html>
+  <head>
+    <title>App Kasir</title>
+  </head>
+  <body>
+    <h1>Kasir</h1>
+  </body>
+</html>
+  `)
 }
 
-async function new100Entry(){
-  let insertOperations = []
-  for(let i = 0; i < 100; i++){
-    insertOperations.push(
-      Product.create({
-        productName: 'GFUEL' + i.toString(), 
-        sku: 'TEST' + (i*10).toString()
-      })
-    )
-  }
-  await Promise.all(insertOperations);
-  console.log('DATA ENTRY DONE');
-}
-
-async function fun(){
-  await printAllEntry();
-  await Sales.sync()
-}
+app.listen(port, () => {
+  console.log(`Example app listening at http://localhost:${port}`)
+})
 
 
-fun()
+
