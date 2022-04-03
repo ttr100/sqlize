@@ -57,19 +57,35 @@ const app = express()
 app.use(express.urlencoded({ extended: true }));
 const port = 3000
 
-app.get('/', indexPage)
-function indexPage(req, res) {
+async function indexPage(req, res) {
+  let products = await Product.findAll();
   res.send(`
 <html>
   <head>
     <title>App Kasir</title>
   </head>
   <body>
-    <h1>Kasir</h1>
+    <h1>Products</h1>
+    <table>
+      <thead>
+        <th>ID</th>
+        <th>Name</th>
+        <th>SKU</th>
+      </thead>
+      <tbody>
+        ${products.map(product => `<tr>
+          <td>${product.id}</td>
+          <td>${product.productName}</td>
+          <td>${product.sku}</td>
+        </tr>`).join('')}
+      </tbody>
+    </table>
   </body>
 </html>
   `)
 }
+
+app.get('/', indexPage)
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
