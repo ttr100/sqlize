@@ -3,8 +3,11 @@ const myDB = new Sql({
     dialect: 'sqlite',
     storage: './data.db'
 })
+// ORM
+// Object-Relation mapping
 
 
+// Model
 const Product = myDB.define(
   'Product', 
   {
@@ -29,7 +32,30 @@ const Product = myDB.define(
   }
 )
 
-// Nicko
+const Sales = myDB.define(
+  'Sales',
+  {
+    id: {
+      type: Sql.DataTypes.INTEGER,
+      field: 'id',
+      autoIncrement: true,
+      primaryKey: true
+    },
+    productId: {
+      type: Sql.DataTypes.INTEGER,
+      field: 'product_id'
+    },
+    quantity: {
+      type: Sql.DataTypes.INTEGER,
+      field: 'quantity'
+    },
+  },
+  {
+    tableName: 'sales',
+  }
+)
+
+
 async function printAllEntry(){
   const allProducts = await Product.findAll();
 
@@ -57,8 +83,9 @@ async function new100Entry(){
 }
 
 async function fun(){
-  await new100Entry();
   await printAllEntry();
+  await Sales.sync()
 }
+
 
 fun()
