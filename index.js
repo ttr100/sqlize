@@ -58,7 +58,23 @@ app.use(express.urlencoded({ extended: true }));
 const port = 3000
 
 async function indexPage(req, res) {
-  let products = await Product.findAll();
+  const searchFilter = req.query.search
+  let product;
+
+  if(searchFilter){
+    products = await Product.findAll({
+      where: {
+        productName: {
+          [Sql.Op.like]: `%${searchFilter}%`
+        }
+      }
+    });
+  }else{
+    products = await Product.findAll();
+  }
+
+  console.log(products.length);
+
   res.send(`
 <html>
   <head>
@@ -83,6 +99,19 @@ async function indexPage(req, res) {
     </div>
     <div class="box">
       <h1>Products</h1>
+      <form method="get" action="/">
+        <div class="field has-addons">
+          <div class="control">
+            <input class="input" type="text" name="search" placeholder="Find a product">
+          </div>
+          <div class="control">
+            <button type="submit" class="button is-info">
+              Search
+            </button>
+          </div>
+        </div>
+      </form>
+
       <table class="table is-fullwidth">
         <thead>
           <th>ID</th>
