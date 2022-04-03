@@ -67,6 +67,13 @@ async function indexPage(req, res) {
   </head>
   <body>
     <div class="box">
+      <form method="post" action="/newProduct">
+        <input type="text" name="name" />
+        <input type="text" name="sku" />
+        <input type="submit" value="Submit" />
+      </form>
+    </div>
+    <div class="box">
       <h1>Products</h1>
       <table class="table is-fullwidth">
         <thead>
@@ -88,7 +95,19 @@ async function indexPage(req, res) {
   `)
 }
 
+
+async function newProduct(req, res){
+  const newProductName = req.body.name;
+  const newProductSKU = req.body.sku;
+  await Product.create({
+    productName: newProductName,
+    sku: newProductSKU,
+  })
+  res.redirect('/')
+}
+
 app.get('/', indexPage)
+app.post("/newProduct", newProduct)
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
