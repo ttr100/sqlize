@@ -68,9 +68,17 @@ async function indexPage(req, res) {
   <body>
     <div class="box">
       <form method="post" action="/newProduct">
-        <input type="text" name="name" />
-        <input type="text" name="sku" />
-        <input type="submit" value="Submit" />
+        <div class="field">
+          <div class="control">
+            <input class="input" type="text" name="name" placeholder="New product name" />
+          </div>
+        </div>
+        <div class="field">
+          <div class="control">
+            <input class="input" type="text" name="sku" placeholder="New product SKU"/>
+          </div>
+        </div>
+        <input class="button is-primary" type="submit" value="Submit" />
       </form>
     </div>
     <div class="box">
