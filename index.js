@@ -63,23 +63,26 @@ async function indexPage(req, res) {
 <html>
   <head>
     <title>App Kasir</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
   </head>
   <body>
-    <h1>Products</h1>
-    <table>
-      <thead>
-        <th>ID</th>
-        <th>Name</th>
-        <th>SKU</th>
-      </thead>
-      <tbody>
-        ${products.map(product => `<tr>
-          <td>${product.id}</td>
-          <td>${product.productName}</td>
-          <td>${product.sku}</td>
-        </tr>`).join('')}
-      </tbody>
-    </table>
+    <div class="box">
+      <h1>Products</h1>
+      <table class="table is-fullwidth">
+        <thead>
+          <th>ID</th>
+          <th>Name</th>
+          <th>SKU</th>
+        </thead>
+        <tbody>
+          ${products.map(product => `<tr>
+            <td>${product.id}</td>
+            <td>${product.productName}</td>
+            <td>${product.sku}</td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>
   </body>
 </html>
   `)
