@@ -118,6 +118,7 @@ async function indexPage(req, res) {
           <th>Name</th>
           <th>SKU</th>
           <th></th>
+          <th></th>
         </thead>
         <tbody>
           ${products.map(product => `<tr>
@@ -125,6 +126,11 @@ async function indexPage(req, res) {
             <td>${product.productName}</td>
             <td>${product.sku}</td>
             <td><a href="/${product.id}" class="button">Edit</a></td>
+            <td>
+              <form method="post" action="/${product.id}/delete">
+                <input class="button is-danger" type="submit" onclick="return confirm('sure to delete?')" value="Delete" />
+              </form>
+            </td>
           </tr>`).join('')}
         </tbody>
       </table>
@@ -182,16 +188,28 @@ async function editProduct(req, res){
             </div>
           </div>
           <input class="button is-primary" type="submit" value="Save" />
+          <a href="/" class="button">Cancel</a>
+          <input class="button is-danger" type="submit" value="Delete" formaction="/${product.id}/delete" />
         </form>
+
       </div>
     </body>
   </html>`)
+}
+
+async function deleteProduct(req, res){
+  const productId = req.params.id
+  const product = await Product.findByPk(productId);
+  await product.destroy()
+
+  res.redirect('/')
 }
 
 app.get('/', indexPage)
 app.post("/newProduct", newProduct)
 app.get("/:id", editProduct)
 app.post("/:id/update", updateProduct)
+app.post("/:id/delete", deleteProduct)
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
