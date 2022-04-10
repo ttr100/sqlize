@@ -117,12 +117,14 @@ async function indexPage(req, res) {
           <th>ID</th>
           <th>Name</th>
           <th>SKU</th>
+          <th></th>
         </thead>
         <tbody>
           ${products.map(product => `<tr>
             <td>${product.id}</td>
             <td>${product.productName}</td>
             <td>${product.sku}</td>
+            <td><a href="/${product.id}" class="button">Edit</a></td>
           </tr>`).join('')}
         </tbody>
       </table>
@@ -136,15 +138,60 @@ async function indexPage(req, res) {
 async function newProduct(req, res){
   const newProductName = req.body.name;
   const newProductSKU = req.body.sku;
+
   await Product.create({
     productName: newProductName,
     sku: newProductSKU,
   })
+
   res.redirect('/')
+}
+
+async function updateProduct(req, res){
+  const newProductName = req.body.name;
+  const newProductSKU = req.body.sku;
+
+  const productToUpdate = await Product.findByPk(req.params.id)
+  productToUpdate.productName = newProductName
+  productToUpdate.sku = newProductSKU
+  await productToUpdate.save()
+
+  res.redirect('/')
+}
+
+async function editProduct(req, res){
+  const productId = req.params.id
+  const product = await Product.findByPk(productId)
+  res.send(`
+    <html>
+    <head>
+      <title>App Kasir</title>
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    </head>
+    <body>
+      <div class="box">
+        <form method="post" action="/${product.id}/update">
+          <div class="field">
+            <div class="control">
+              <input class="input" type="text" name="name" value="${product.productName}" placeholder="New product name" />
+            </div>
+          </div>
+          <div class="field">
+            <div class="control">
+              <input class="input" type="text" name="sku" value="${product.sku}" placeholder="New product SKU"/>
+            </div>
+          </div>
+          <input class="button is-primary" type="submit" value="Save" />
+        </form>
+      </div>
+    </body>
+  </html>`)
 }
 
 app.get('/', indexPage)
 app.post("/newProduct", newProduct)
+app.get("/:id", editProduct)
+app.post("/:id/update", updateProduct)
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
