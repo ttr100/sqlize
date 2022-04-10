@@ -30,6 +30,25 @@ const Product = myDB.define(
   }
 )
 
+const Shop = myDB.define(
+  'Shops',
+  {
+    id: {
+      type: Sql.DataTypes.INTEGER,
+      field: 'id',
+      autoIncrement: true,
+      primaryKey: true
+    },
+    name: {
+      type: Sql.DataTypes.STRING,
+      field: 'name'
+    },
+  },
+  {
+    tableName: 'shops',
+  }
+)
+
 const Sales = myDB.define(
   'Sales',
   {
@@ -52,6 +71,7 @@ const Sales = myDB.define(
     tableName: 'sales',
   }
 )
+
 
 const app = express()
 app.use(express.urlencoded({ extended: true }));
@@ -140,7 +160,6 @@ async function indexPage(req, res) {
   `)
 }
 
-
 async function newProduct(req, res){
   const newProductName = req.body.name;
   const newProductSKU = req.body.sku;
@@ -214,6 +233,3 @@ app.post("/:id/delete", deleteProduct)
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
 })
-
-
-
