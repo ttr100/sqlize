@@ -59,10 +59,6 @@ const Sales = myDB.define(
       autoIncrement: true,
       primaryKey: true
     },
-    productId: {
-      type: Sql.DataTypes.INTEGER,
-      field: 'product_id'
-    },
     quantity: {
       type: Sql.DataTypes.INTEGER,
       field: 'quantity'
@@ -72,6 +68,8 @@ const Sales = myDB.define(
     tableName: 'sales',
   }
 )
+// Associations
+Sales.belongsTo(Product, {foreignKey: 'productId'})
 
 async function SyncModels(){
   await Product.sync()

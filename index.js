@@ -1,5 +1,5 @@
 const express = require('express')
-const {Product, SyncModels} = require('./db')
+const {Product, Sales, SyncModels} = require('./db')
 const shop = require('./shop')
 
 
@@ -117,6 +117,12 @@ async function updateProduct(req, res){
 async function editProduct(req, res){
   const productId = req.params.id
   const product = await Product.findByPk(productId)
+  const productSales = await Sales.findAll({
+    where: {
+      productId: productId,
+    }
+  })
+
   res.send(`
     <html>
     <head>
@@ -140,7 +146,22 @@ async function editProduct(req, res){
           <a href="/" class="button">Cancel</a>
           <input class="button is-danger" type="submit" value="Delete" formaction="/${product.id}/delete" />
         </form>
-
+      </div>
+      <div class="box">
+        <table class="table is-fullwidth">
+          <thead>
+            <tr>
+              <th>Quantity</th>
+              <th>Tiemestamp</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${productSales.map(sale => `<tr>
+              <td>${sale.quantity}</td>
+              <td>${sale.createdAt}</td>
+            </tr>`).join('')}
+          </tbody>
+        </table>
       </div>
     </body>
   </html>`)
