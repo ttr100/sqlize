@@ -148,6 +148,14 @@ async function editProduct(req, res){
         </form>
       </div>
       <div class="box">
+        <form method="post" action="/${product.id}/sales">
+          <div class="field">
+            <div class="control">
+              <input class="input" type="number" name="quantity" placeholder="0" />
+            </div>
+            <input class="button is-primary" type="submit" value="Record Sale" />
+          </div>
+        </form>
         <table class="table is-fullwidth">
           <thead>
             <tr>
@@ -175,6 +183,17 @@ async function deleteProduct(req, res){
   res.redirect('/')
 }
 
+async function recordProductSale(req, res){
+  const product = await Product.findByPk(req.params.id)
+  const qty = req.body.quantity
+  await Sales.create({
+    quantity: qty,
+    productId: product.id
+  })
+
+  res.redirect(`/${product.id}`)
+}
+
 
 
 app.get("/shop", shop.shopPage);
@@ -186,6 +205,7 @@ app.post("/shop/:id/delete", shop.deleteShop);
 app.get('/', indexPage)
 app.post("/newProduct", newProduct)
 app.get("/:id", editProduct)
+app.post("/:id/sales", recordProductSale)
 app.post("/:id/update", updateProduct)
 app.post("/:id/delete", deleteProduct)
 
