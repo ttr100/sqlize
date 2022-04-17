@@ -26,6 +26,7 @@ const Product = myDB.define(
   },
   {
     tableName: 'products',
+    timestamps: false
   }
 )
 Product.sync()
