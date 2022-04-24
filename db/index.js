@@ -65,6 +65,9 @@ const Sales = myDB.define(
       type: Sql.DataTypes.INTEGER,
       field: 'quantity'
     },
+    quantitySum: {
+      type: Sql.DataTypes.VIRTUAL,
+    }
   },
   {
     tableName: 'sales',

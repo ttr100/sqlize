@@ -1,6 +1,7 @@
 const express = require('express')
 const {Product, Sales, SyncModels, Op} = require('./db')
 const shop = require('./shop')
+const sequelize = require('sequelize');
 
 
 const app = express()
@@ -209,6 +210,14 @@ async function salesIndexPage(req, res){
     ]
   })
 
+  const salesSummary = await Sales.findAll({
+    attributes: [
+      [sequelize.fn('SUM', sequelize.col('quantity')), 'quantitySum']
+    ],
+    group: 'productId',
+    include: Product,
+  })
+
   res.send(`
     <html>
     <head>
@@ -216,6 +225,24 @@ async function salesIndexPage(req, res){
       <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
     </head>
     <body>
+
+      <div class="box">
+        <table class="table is-fullwidth">
+          <thead>
+            <tr>
+              <th>Product name</th>
+              <th>Quantity</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${salesSummary.map(sale => `<tr>
+              <td>${sale.Product.productName}</td>
+              <td>${sale.quantitySum}</td>
+            </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+
       <div class="box">
         <table class="table is-fullwidth">
           <thead>
