@@ -1,0 +1,53 @@
+  <html>
+  <head>
+    <title>App Kasir</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+  </head>
+  <body>
+    <div class="box">
+      <form method="post" action="/<%= product.id %>/update">
+        <div class="field">
+          <div class="control">
+            <input class="input" type="text" name="name" value="<%= product.productName %>" placeholder="New product name" />
+          </div>
+        </div>
+        <div class="field">
+          <div class="control">
+            <input class="input" type="text" name="sku" value="<%= product.sku %>" placeholder="New product SKU"/>
+          </div>
+        </div>
+        <input class="button is-primary" type="submit" value="Save" />
+        <a href="/" class="button">Cancel</a>
+        <input class="button is-danger" type="submit" value="Delete" formaction="/<%= product.id %>/delete" />
+      </form>
+    </div>
+    <div class="box">
+    
+      <form method="post" action="/<%= product.id %>/sales">
+        <input type="hidden" name="productId" value="<%= product.id %>">
+        <div class="field">
+          <div class="control">
+            <input class="input" type="number" name="quantity" placeholder="0" />
+          </div>
+          <input class="button is-primary" type="submit" value="Record Sale" />
+        </div>
+      </form>
+      <table class="table is-fullwidth">
+        <thead>
+          <tr>
+            <th>Quantity</th>
+            <th>Tiemestamp</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% productSales.forEach(function(sale){ %>
+            <tr>
+              <td><%= sale.quantity %></td>
+              <td><%= sale.createdAt %></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </body>
+</html>
