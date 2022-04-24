@@ -5,6 +5,8 @@ const myDB = new Sql({
     storage: './data.db'
 })
 
+const Op = Sql.Op
+
 // Model
 const Product = myDB.define(
   'Product', 
@@ -71,6 +73,13 @@ const Sales = myDB.define(
 // Associations
 Sales.belongsTo(Product, {foreignKey: 'productId'})
 
+
+// Alice owns 3 cars
+// car1 belongs to alice //tabale car  - owner_id - 
+// car2 belongs to alice
+// car3 belongs to alice
+
+
 async function SyncModels(){
   await Product.sync()
   await Shop.sync()
@@ -78,5 +87,5 @@ async function SyncModels(){
 }
 
 module.exports = {
-  Product, Shop, Sales, SyncModels
+  Product, Shop, Sales, SyncModels, Op
 }

@@ -1,5 +1,5 @@
 const express = require('express')
-const {Product, Sales, SyncModels} = require('./db')
+const {Product, Sales, SyncModels, Op} = require('./db')
 const shop = require('./shop')
 
 
@@ -148,7 +148,9 @@ async function editProduct(req, res){
         </form>
       </div>
       <div class="box">
+      
         <form method="post" action="/${product.id}/sales">
+          <input type="hidden" name="productId" value="${product.id}">
           <div class="field">
             <div class="control">
               <input class="input" type="number" name="quantity" placeholder="0" />
@@ -195,6 +197,50 @@ async function recordProductSale(req, res){
 }
 
 
+app.get("/favicon.ico", (req, res) => {
+  res.send('')
+});
+
+async function salesIndexPage(req, res){
+  const productSales = await Sales.findAll({
+    include: Product,
+    order: [
+      ['createdAt', 'DESC'] //descending
+    ]
+  })
+
+  res.send(`
+    <html>
+    <head>
+      <title>App Kasir</title>
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    </head>
+    <body>
+      <div class="box">
+        <table class="table is-fullwidth">
+          <thead>
+            <tr>
+              <th>Product name</th>
+              <th>Product SKU</th>
+              <th>Quantity</th>
+              <th>Tiemestamp</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${productSales.map(sale => `<tr>
+              <td>${sale.Product.productName}</td>
+              <td>${sale.Product.sku}</td>
+              <td>${sale.quantity}</td>
+              <td>${sale.createdAt}</td>
+            </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+    </body>
+  </html>`)
+}
+
+app.get('/sales', salesIndexPage)
 
 app.get("/shop", shop.shopPage);
 app.post("/new-shop", shop.newShop);
@@ -208,6 +254,7 @@ app.get("/:id", editProduct)
 app.post("/:id/sales", recordProductSale)
 app.post("/:id/update", updateProduct)
 app.post("/:id/delete", deleteProduct)
+
 
 
 SyncModels();
