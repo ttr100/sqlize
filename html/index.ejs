@@ -1,9 +1,63 @@
 <html>
   <head>
     <title>App Kasir</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
   </head>
   <body>
-    <h1><%= header %></h1>
-    <p><%= name %></p>
+    <div class="box">
+      <form method="post" action="/newProduct">
+        <div class="field">
+          <div class="control">
+            <input class="input" type="text" name="name" placeholder="New product name" />
+          </div>
+        </div>
+        <div class="field">
+          <div class="control">
+            <input class="input" type="text" name="sku" placeholder="New product SKU"/>
+          </div>
+        </div>
+        <input class="button is-primary" type="submit" value="Submit" />
+      </form>
+    </div>
+    <div class="box">
+      <h1>Products</h1>
+      <form method="get" action="/">
+        <div class="field has-addons">
+          <div class="control">
+            <input class="input" type="text" name="search" placeholder="Find a product">
+          </div>
+          <div class="control">
+            <button type="submit" class="button is-info">
+              Search
+            </button>
+          </div>
+        </div>
+      </form>
+
+      <table class="table is-fullwidth">
+        <thead>
+          <th>ID</th>
+          <th>Name</th>
+          <th>SKU</th>
+          <th></th>
+          <th></th>
+        </thead>
+        <tbody>
+          <% products.forEach(function(product){ %>
+            <tr>
+              <td><%= product.id %></td>
+              <td><%= product.productName %></td>
+              <td><%= product.sku %></td>
+              <td><a href="/<%= product.id %>" class="button">Edit</a></td>
+              <td>
+                <form method="post" action="/<%= product.id %>/delete">
+                  <input class="button is-danger" type="submit" onclick="return confirm('sure to delete?')" value="Delete" />
+                </form>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
   </body>
 </html>
