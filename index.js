@@ -5,6 +5,9 @@ const sequelize = require('sequelize');
 
 
 const app = express()
+app.set('views', './html');
+app.set('view engine', 'ejs');
+
 app.use(express.urlencoded({ extended: true }));
 const port = 3000
 
@@ -23,8 +26,6 @@ async function indexPage(req, res) {
   }else{
     products = await Product.findAll();
   }
-
-  console.log(products.length);
 
   res.send(`
 <html>
@@ -266,6 +267,10 @@ async function salesIndexPage(req, res){
     </body>
   </html>`)
 }
+
+app.get('/temp', function(req, res){
+  res.render('index', {header: 'TEMP', name: 'Alice'});
+})
 
 app.get('/sales', salesIndexPage)
 
